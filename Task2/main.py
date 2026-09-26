@@ -18,8 +18,8 @@ Implement parallel processing
 
 def check_word(groups):
     word, hash_f = groups # get the group into the word and the hash
-    if bcrypt.checkpw(word.encode(), hash_f.encode()):   # word vs stored hash
-        return word                                      # return cracked password if any
+    if bcrypt.checkpw(word.encode(), hash_f.encode()): # word vs stored hash
+        return word # return the cracked password
     return None
 
 def parallel_crack(hash_f):
@@ -36,7 +36,6 @@ def parallel_crack(hash_f):
             return word
 
     return None
-
 #Task
 
 """
