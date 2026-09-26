@@ -1,4 +1,6 @@
 import hashlib
+import time
+import matplotlib.pyplot as plt
 
 
 # convert the string into bytes, hash the bytes, return in hex
@@ -78,6 +80,8 @@ def find_collision(bits):
     # keep track of how many inputs we have tried
     attempts = 0
 
+    start_time = time.perf_counter()
+
     while True:
         input_string = str(attempts)
         hash_string = sha256_hash(input_string)
@@ -85,7 +89,9 @@ def find_collision(bits):
 
         # check whether this truncated hash is already in seen
         if truncated in seen:
-            return seen[truncated], input_string, attempts + 1
+            end_time = time.perf_counter() - start_time
+
+            return seen[truncated], input_string, attempts + 1, end_time
         else:
             seen[truncated] = input_string
  
@@ -93,19 +99,30 @@ def find_collision(bits):
         
 
 def task_1c():
-    input1, input2, attempts = find_collision(8)
+    bits_list = []
+    attempts_list = []
+    time_list = []
 
-    hash1 = sha256_hash(input1)
-    hash2 = sha256_hash(input2)
+    for bits in range(8, 51, 2):
+        input1, input2, attempts, elapsed = find_collision(bits)
 
-    truncated1 = truncate_hash(hash1, 8)
-    truncated2 = truncate_hash(hash2, 8)
+        bits_list.append(bits)
+        attempts_list.append(attempts)
+        time_list.append(elapsed)
 
-    print(f"Input 1: {input1}")
-    print(f"Input 2: {input2}")
-    print(f"Truncated hash 1: {truncated1}")
-    print(f"Truncated hash 2: {truncated2}")
-    print(f"Attempts: {attempts}")
+        hash1 = sha256_hash(input1)
+        hash2 = sha256_hash(input2)
+
+        truncated1 = truncate_hash(hash1, bits)
+        truncated2 = truncate_hash(hash2, bits)
+
+        print(f"\nDigest size: {bits} bits")
+        print(f"Input 1: {input1}")
+        print(f"Input 2: {input2}")
+        print(f"Truncated hash 1: {truncated1}")
+        print(f"Truncated hash 2: {truncated2}")
+        print(f"Attempts: {attempts}")
+        print(f"Time: {elapsed:.6f} seconds")
 
 
 def main():
