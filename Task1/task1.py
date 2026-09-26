@@ -9,7 +9,15 @@ def sha256_hash(input_string):
     return hashlib.sha256(string_bytes).hexdigest()
 
 def task_1a():
-    pass
+    print("\n--- Task 1a: SHA256 Hashing ---")
+
+    inputs = ["Hello, World!", "Python", "Cryptography"]
+
+    for input_string in inputs:
+        digest = sha256_hash(input_string)
+
+        print(f"\nInput: {input_string}")
+        print(f"SHA256: {digest}")
 
 # requirement says your two inputs need to differ by exactly one bit. 
 # The professor’s notes suggest generating a string and flipping a bit in it
@@ -104,6 +112,8 @@ def task_1c():
     time_list = []
 
     for bits in range(8, 51, 2):
+        print(f"\nSearching for collision at {bits} bits...")
+
         input1, input2, attempts, elapsed = find_collision(bits)
 
         bits_list.append(bits)
@@ -124,6 +134,25 @@ def task_1c():
         print(f"Attempts: {attempts}")
         print(f"Time: {elapsed:.6f} seconds")
 
+    # graph digest size vs collision time
+    plt.figure()
+    plt.plot(bits_list, time_list, marker="o")
+    plt.xlabel("Digest Size (bits)")
+    plt.ylabel("Collision Time (seconds)")
+    plt.title("Digest Size vs Collision Time")
+    plt.grid()
+    plt.savefig("collision_time.png")
+
+    # graph digest size vs number of inputs
+    plt.figure()
+    plt.plot(bits_list, attempts_list, marker="o")
+    plt.xlabel("Digest Size (bits)")
+    plt.ylabel("Number of Inputs")
+    plt.title("Digest Size vs Number of Inputs")
+    plt.grid()
+    plt.savefig("collision_inputs.png")
+
+    plt.show()
 
 def main():
     task_1a()
