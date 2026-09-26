@@ -18,8 +18,8 @@ Implement parallel processing
 
 def check_word(groups):
     word, hash_f = groups # get the group into the word and the hash
-    if bcrypt.checkpw(word.encode(), hash_f.encode()):   # word vs stored hash
-        return word                                      # return cracked password if any
+    if bcrypt.checkpw(word.encode(), hash_f.encode()): # word vs stored hash
+        return word # return the cracked password
     return None
 
 def parallel_crack(hash_f):
@@ -57,14 +57,39 @@ bcrypt implementation
 """
 
 def main():
-    components = Shadow_Parse.load_shadow(r"C:\Users\vigt\Desktop\CyberSecurityProjects\hashing_and_passwords\Task2\shadow.txt")
-    results = {}
+    path = r"C:\Users\vigt\Desktop\CyberSecurityProjects\hashing_and_passwords\Task2\shadow.txt"
+    print("Loading shadow file from", path, "...")
+    components = Shadow_Parse.load_shadow(path)
+    print("Loaded", len(components), "entries from the shadow file.")
+    print("Wordlist size:", len(nltk_wordlist), "candidate words")
+    print()
 
+    results = {}
     for entry in components:
+        # show what we parsed for this user
+        print("User:      ", entry.username)
+        print("Algorithm: ", entry.algorithm)
+        print("Workfactor:", entry.workfactor)
+        print("Salt:      ", entry.salt)
+        print("Hash value:", entry.hashval)
+
         full_hash = "$" + entry.algorithm + "$" + entry.workfactor + "$" + entry.salt + entry.hashval
+
+        print("Cracking password for", entry.username, "... (this can take a while)")
         password, duration = timer(full_hash)
+
+        if password is not None:
+            print("  -> CRACKED:", password, "in", round(duration, 2), "seconds")
+        else:
+            print("  -> not found in wordlist (", round(duration, 2), "seconds )")
+        print()
+
         results[entry.username] = {"password": password, "duration": duration}
-        print(entry.username, "->", password, "(", round(duration, 2), "seconds )")
+
+    # final summary of everything
+    print("===== Results =====")
+    for user, info in results.items():
+        print(user, "->", info["password"], "(", round(info["duration"], 2), "seconds )")
 
 
 if __name__ == "__main__":
