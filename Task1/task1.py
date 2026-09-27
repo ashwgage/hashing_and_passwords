@@ -141,7 +141,7 @@ def task_1c():
     plt.ylabel("Collision Time (seconds)")
     plt.title("Digest Size vs Collision Time")
     plt.grid()
-    plt.savefig("collision_time.png")
+    plt.savefig("Task1/collision_time.png")
 
     # graph digest size vs number of inputs
     plt.figure()
@@ -150,7 +150,7 @@ def task_1c():
     plt.ylabel("Number of Inputs")
     plt.title("Digest Size vs Number of Inputs")
     plt.grid()
-    plt.savefig("collision_inputs.png")
+    plt.savefig("Task1/collision_inputs.png")
 
     plt.show()
 
